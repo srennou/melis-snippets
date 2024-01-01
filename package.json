@@ -1,0 +1,22 @@
+{
+  "name": "melis-snippets",
+  "displayName": "Melis snippets",
+  "description": "melis platform code snippets",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+	"repository": "https://github.com/srennou/melis-snippets",
+  "categories": [
+    "Snippets"
+  ],
+  "icon": "melis.png",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "php",
+        "path": "./snippets/php.code-snippets"
+      }
+    ]
+  }
+}

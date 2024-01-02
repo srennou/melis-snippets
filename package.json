@@ -3,7 +3,7 @@
   "displayName": "Melis Platform",
   "description": "melis platform",
   "publisher": "simosrennou",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -18,7 +18,8 @@
   "main": "extension.js",
   "activationEvents": [
     "onCommand:melis.addController",
-    "onCommand:melis.addService"
+    "onCommand:melis.addService",
+    "onCommand:melis.start"
   ],
   "contributes": {
     "snippets": [
@@ -35,7 +36,14 @@
       {
         "command": "melis.addService",
         "title": "Melis: Add Service"
+      },
+      {
+        "command": "melis.start",
+        "title": "Melis DB config"
       }
     ]
+  },
+  "dependencies": {
+    "php-parser": "^3.1.5"
   }
 }

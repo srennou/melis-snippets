@@ -1,8 +1,8 @@
-
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const fsPromises = require('fs').promises;
+const vm = require('vm');
 
 async function getModuleNames() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -91,8 +91,6 @@ async function addController() {
             await fsPromises.access(controllerPath);
             vscode.window.showErrorMessage(`Controller '${controllerName}Controller' in module '${moduleName}' already exists!`);
         } catch (err) {
-            console.log('Controller does not exist. Creating...');
-
             const templatePath = path.join(__dirname, 'templates', 'controllerTemplate.php');
             const controllerTemplate = await fsPromises.readFile(templatePath, 'utf8');
             const controllerContent = controllerTemplate
@@ -174,7 +172,6 @@ async function addService() {
             await fsPromises.access(servicePath);
             vscode.window.showErrorMessage(`Service '${serviceName}Service' in module '${moduleName}' already exists!`);
         } catch (err) {
-            console.log('Service does not exist. Creating...');
 
             const templatePath = path.join(__dirname, 'templates', 'serviceTemplate.php');
             const serviceTemplate = await fsPromises.readFile(templatePath, 'utf8');
@@ -202,6 +199,84 @@ module.exports = {
     activate: context => {
         let addControllerDisposable = vscode.commands.registerCommand('melis.addController', addController);
         let addServiceDisposable = vscode.commands.registerCommand('melis.addService', addService);
-        context.subscriptions.push(addControllerDisposable, addServiceDisposable);
+        context.subscriptions.push(
+            vscode.commands.registerCommand('melis.start', () => {
+                const panel = vscode.window.createWebviewPanel(
+                    'melis',
+                    'Melis DB config',
+                    vscode.ViewColumn.One,
+                    {
+                        enableScripts: true,
+                    }
+                );
+                const properties = readPropertiesFromFiles();
+                const htmlContent = generateHtml(properties);
+                panel.webview.html = htmlContent;
+            }, addControllerDisposable, addServiceDisposable)
+        );
     }
-};
+}
+
+function readPropertiesFromFiles() {
+    try {
+        const workspaceFolders = vscode.workspace.workspaceFolders;
+        if (!workspaceFolders || workspaceFolders.length === 0) {
+            vscode.window.showErrorMessage('No workspace folder found. Please open a workspace.');
+            return [];
+        }
+
+        const folderPath = path.join(workspaceFolders[0].uri.fsPath, 'config', 'autoload', 'platforms');
+
+        const files = fs.readdirSync(folderPath).filter(file => file.endsWith('.php'));
+
+        const properties = [];
+
+        files.forEach(file => {
+            const filePath = path.join(folderPath, file);
+            try {
+                const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+                const match = fileContent.match(/'driver'\s*=>\s*'Mysqli',\s*'hostname'\s*=>\s*'[^']*',\s*'database'\s*=>\s*'[^']*',\s*'username'\s*=>\s*'[^']*',\s*'password'\s*=>\s*'[^']*',\s*'port'\s*=>\s*'[^']*',\s*'charset'\s*=>\s*'utf8'/s);
+
+                if (match) {
+                    const extractedProperties = match[0];
+                    properties.push({
+                        fileName: file,
+                        extractedProperties: extractedProperties,
+                    });
+                } else {
+                    console.error(`Error parsing file '${file}': Unable to extract specific properties`);
+                }
+            } catch (error) {
+                console.error(`Error processing file '${file}': ${error.message}`);
+            }
+        });
+        return properties;
+    } catch (error) {
+        console.error(`Error reading module directories: ${error.message}`);
+        return [];
+    }
+}
+
+function generateHtml(properties) {
+    let html = '<html><body>';
+    
+    properties.forEach(property => {
+        html += `<h2>${property.fileName}</h2>`;
+        html += '<table border="1">';
+        html += '<tr><th>Key</th><th>Value</th></tr>';
+
+        // Split the extracted properties into key-value pairs
+        const keyValuePairs = property.extractedProperties.split(',');
+
+        keyValuePairs.forEach(pair => {
+            const [key, value] = pair.split('=>').map(str => str.trim());
+            html += `<tr><td>${key}</td><td>${value}</td></tr>`;
+        });
+
+        html += '</table>';
+    });
+
+    html += '</body></html>';
+    return html;
+}

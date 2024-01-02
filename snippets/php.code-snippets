@@ -69,7 +69,7 @@
             "            'name' => 'NotEmpty',",
             "            'options' => [",
             "                'messages' => [",
-            "                    \Laminas\Validator\NotEmpty::IS_EMPTY => 'tr_module_value_must_not_is_empty',",
+            "                    \\Laminas\\Validator\\NotEmpty::IS_EMPTY => 'tr_module_value_must_not_is_empty',",
             "                ],",
             "            ],",
             "        ],",
@@ -132,7 +132,7 @@
         "body": [
             "'form_elements' => [",
             "    'factories' => [",
-            "        'DimensionsSelect' => \Buildingdimensions\Form\Factory\DimensionsSelectFactory::class,",
+            "        'ModuleSelect' => \\Module\\Form\\Factory\\ModuleSelectFactory::class,",
             "    ]",
             "],",
         ],

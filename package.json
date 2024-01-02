@@ -1,21 +1,40 @@
 {
-  "name": "melis-snippets",
-  "displayName": "Melis snippets",
-  "description": "melis platform code snippets",
-  "version": "0.0.1",
+  "name": "melis-platform",
+  "displayName": "Melis Platform",
+  "description": "melis platform",
+  "publisher": "simosrennou",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.85.0"
   },
-	"repository": "https://github.com/srennou/melis-snippets",
-  "categories": [
-    "Snippets"
+  "repository": "https://github.com/srennou/melis-snippets",
+  "keywords": [
+    "Melis",
+    "Melis technologies",
+    "Melis Plactform",
+    "code snippets"
   ],
   "icon": "melis.png",
+  "main": "extension.js",
+  "activationEvents": [
+    "onCommand:melis.addController",
+    "onCommand:melis.addService"
+  ],
   "contributes": {
     "snippets": [
       {
         "language": "php",
         "path": "./snippets/php.code-snippets"
+      }
+    ],
+    "commands": [
+      {
+        "command": "melis.addController",
+        "title": "Melis: Add Controller"
+      },
+      {
+        "command": "melis.addService",
+        "title": "Melis: Add Service"
       }
     ]
   }

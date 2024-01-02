@@ -34,6 +34,10 @@
         "title": "Melis: Add Controller"
       },
       {
+        "command": "melis.addTable",
+        "title": "Melis: Add Table class"
+      },
+      {
         "command": "melis.addService",
         "title": "Melis: Add Service"
       },

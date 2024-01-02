@@ -32,6 +32,107 @@ async function getModuleNames() {
     }
 }
 
+async function addTable() {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+        vscode.window.showErrorMessage('No workspace folder found. Please open a workspace.');
+        return;
+    }
+
+    try {
+        const moduleNames = await getModuleNames();
+        if (moduleNames.length === 0) {
+            vscode.window.showErrorMessage('No modules found in the project.');
+            return;
+        }
+
+        const selectedModuleName = await vscode.window.showQuickPick(moduleNames, {
+            placeHolder: 'Select a module:',
+        });
+
+        if (!selectedModuleName) {
+            return;
+        }
+
+        const moduleName = selectedModuleName;
+
+        if (!moduleName) {
+            return;
+        }
+
+        const modulePath = path.join(workspaceFolders[0].uri.fsPath, 'module', moduleName);
+
+        if (!fs.existsSync(modulePath)) {
+            vscode.window.showErrorMessage(`Module '${moduleName}' does not exist in the project!`);
+            return;
+        }
+
+        const TableClassName = await vscode.window.showInputBox({
+            prompt: 'Enter the name of the Table Class without "Table":',
+            placeHolder: 'e.g., Users',
+        });
+
+        if (!TableClassName) {
+            return;
+        }
+        const TableName = await vscode.window.showInputBox({
+            prompt: 'Enter the name of the Table:',
+            placeHolder: 'e.g., users_table',
+        });
+
+        if (!TableName) {
+            return;
+        }
+        const PrimaryName = await vscode.window.showInputBox({
+            prompt: 'Enter the name of the primary key :',
+            placeHolder: 'e.g., id',
+        });
+
+        if (!PrimaryName) {
+            return;
+        }
+        
+        const customModuleName = selectedModuleName.replace(/^MelisSites\//, '');
+
+        const tableClassDir = path.join(modulePath, 'src', customModuleName, 'Model', 'Tables');
+        const tableClassPath = path.join(tableClassDir, `${TableClassName}Table.php`);
+
+        try {
+            await fsPromises.mkdir(tableClassDir, { recursive: true });
+        } catch (err) {
+            vscode.window.showErrorMessage(`Error creating directory structure: ${err.message}`);
+            return;
+        }
+
+        try {
+            await fsPromises.access(tableClassPath);
+            vscode.window.showErrorMessage(`Table '${TableClassName}Table' in module '${moduleName}' already exists!`);
+        } catch (err) {
+            const templatePath = path.join(__dirname, 'templates', 'tableClassTemplate.php');
+            const tableClassTemplate = await fsPromises.readFile(templatePath, 'utf8');
+            const tableClassContent = tableClassTemplate
+                .replace(/#modulename/g, customModuleName)
+                .replace(/#tableName/g, TableName)
+                .replace(/#primaryName/g, PrimaryName)
+                .replace(/#tableClassName/g, TableClassName);
+                
+
+            await fsPromises.writeFile(tableClassPath, tableClassContent);
+
+            const configFile = path.join(modulePath, 'config', 'module.config.php');
+            const configContent = await fsPromises.readFile(configFile, 'utf8');
+            const newLine = `            '${TableClassName}Table'         => \\${customModuleName}\\Model\\Tables\\${TableClassName}Table::class,`;
+
+            const updatedConfigContent = configContent.replace(/'service_manager' => \[\s*'aliases' => \[/, `$&\n${newLine}`);
+
+            await fsPromises.writeFile(configFile, updatedConfigContent);
+            vscode.window.showInformationMessage(`Controller '${TableClassName}' in module '${moduleName}' created successfully!`);
+        }
+    } catch (err) {
+        vscode.window.showErrorMessage(`An error occurred: ${err.message}`);
+    }
+}
+
 async function addController() {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders || workspaceFolders.length === 0) {
@@ -68,8 +169,8 @@ async function addController() {
         }
 
         const controllerName = await vscode.window.showInputBox({
-            prompt: 'Enter the name of the controller:',
-            placeHolder: 'e.g., test',
+            prompt: 'Enter the name of the controller without "Controller":',
+            placeHolder: 'e.g., Home',
         });
 
         if (!controllerName) {
@@ -149,8 +250,8 @@ async function addService() {
         }
 
         const serviceName = await vscode.window.showInputBox({
-            prompt: 'Enter the name of the service:',
-            placeHolder: 'e.g., test',
+            prompt: 'Enter the name of the service without "Service":',
+            placeHolder: 'e.g., tool',
         });
 
         if (!serviceName) {
@@ -199,6 +300,8 @@ module.exports = {
     activate: context => {
         let addControllerDisposable = vscode.commands.registerCommand('melis.addController', addController);
         let addServiceDisposable = vscode.commands.registerCommand('melis.addService', addService);
+        let addTableDisposable = vscode.commands.registerCommand('melis.addTable', addTable);
+        
         context.subscriptions.push(
             vscode.commands.registerCommand('melis.start', () => {
                 const panel = vscode.window.createWebviewPanel(
@@ -212,7 +315,7 @@ module.exports = {
                 const properties = readPropertiesFromFiles();
                 const htmlContent = generateHtml(properties);
                 panel.webview.html = htmlContent;
-            }, addControllerDisposable, addServiceDisposable)
+            }, addControllerDisposable, addServiceDisposable, addTableDisposable)
         );
     }
 }

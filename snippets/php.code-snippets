@@ -3,9 +3,9 @@
         "prefix": "snipMelisTableGetAll",
         "body": [
             "public function getAll() {",
-            "   $select = $this->getTableGateway()->getSql()->select();",
-            "   $resultSet = $this->getTableGateway()->selectWith($select);",
-            "   return $resultSet;",
+            "   \$select = \$this->getTableGateway()->getSql()->select();",
+            "   \$resultSet = \$this->getTableGateway()->selectWith(\$select);",
+            "   return \$resultSet;",
             "}",
         ],
         "description": "Basic Get All Table Functions"

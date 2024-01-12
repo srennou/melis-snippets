@@ -10,6 +10,18 @@
         ],
         "description": "Basic Get All Table Functions"
     },
+    "Basic join Table Snip": {
+        "prefix": "snipMelisTableJoin",
+        "body": [
+            "\$select->join("
+            "   'table1',"
+            "    'table1.col1' . ' = table2.col2',"
+            "   ['*'],"
+            "   \$select::JOIN_LEFT"
+            ");",
+        ],
+        "description": "Basic Join Table Snippets"
+    },
     "Basic Config table filters Functions": {
         "prefix": "snipMelisConfTableFilters",
         "body": [

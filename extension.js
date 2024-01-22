@@ -59,7 +59,9 @@ function generateHtml(properties) {
 
         keyValuePairs.forEach(pair => {
             const [key, value] = pair.split('=>').map(str => str.trim());
-            html += `<tr><td>${key}</td><td>${value.slice(1, -1)}</td></tr>`;
+            if(value){
+                html += `<tr><td>${key}</td><td>${value.slice(1, -1)}</td></tr>`;
+            }
         });
 
         html += '</table>';

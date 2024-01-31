@@ -3,9 +3,9 @@
         "prefix": "snipMelisTableGetAll",
         "body": [
             "public function getAll() {",
-            "   \$select = \$this->getTableGateway()->getSql()->select();",
-            "   \$resultSet = \$this->getTableGateway()->selectWith(\$select);",
-            "   return \$resultSet;",
+            "   $$select = $$this->getTableGateway()->getSql()->select();",
+            "   $$resultSet = $$this->getTableGateway()->selectWith($$select);",
+            "   return $$resultSet;",
             "}",
         ],
         "description": "Basic Get All Table Functions"
@@ -13,11 +13,11 @@
     "Basic join Table Snip": {
         "prefix": "snipMelisTableJoin",
         "body": [
-            "\$select->join("
+            "$$select->join("
             "   'table1',"
             "    'table1.col1' . ' = table2.col2',"
             "   ['*'],"
-            "   \$select::JOIN_LEFT"
+            "   $$select::JOIN_LEFT"
             ");",
         ],
         "description": "Basic Join Table Snippets"
@@ -98,16 +98,16 @@
         "prefix": "snipMelisDoubleColumnView",
         "body": [
             "<?php",
-            "$id = $this->id . '_' . $this->zoneconfig['conf']['id'];",
-            "$form = $this->form;",
-            "$form->prepare();",
-            "echo $this->form()->openTag($form);",
-            "    foreach ($form->getElements() as $key => $val) {",
-            "        if ($this->id == 'add' && $val->getAttribute('id') == 'id_column'){",
+            "$$id = $$this->id . '_' . $$this->zoneconfig['conf']['id'];",
+            "$$form = $$this->form;",
+            "$$form->prepare();",
+            "echo $$this->form()->openTag($$form);",
+            "    foreach ($$form->getElements() as $$key => $$val) {",
+            "        if ($$this->id == 'add' && $$val->getAttribute('id') == 'id_column'){",
             "            continue;",
             "        }",
-            "        if($val->getAttribute('group') == null) {",
-            "            echo $this->MelisFieldRow($val);",
+            "        if($$val->getAttribute('group') == null) {",
+            "            echo $$this->MelisFieldRow($$val);",
             "        }",
             "    }",
             "?>",
@@ -115,9 +115,9 @@
             "    <div class='col-12 col-md-6 col-lg-6'>",
             "        <?php",
             "        echo ('<div class='form_group_left'>');",
-            "        foreach ($form->getElements() as $key => $val) {",
-            "            if ($val->getAttribute('group') == 'form_group_left') {",
-            "                echo $this->MelisFieldRow($val);",
+            "        foreach ($$form->getElements() as $$key => $$val) {",
+            "            if ($$val->getAttribute('group') == 'form_group_left') {",
+            "                echo $$this->MelisFieldRow($$val);",
             "            }",
             "        }",
             "        echo ('</div>');",
@@ -126,16 +126,16 @@
             "    <div class='col-12 col-md-6 col-lg-6'>",
             "        <?php",
             "        echo ('<div class='form_group_right'>');",
-            "        foreach ($form->getElements() as $key => $val) {",
-            "            if ($val->getAttribute('group') == 'form_group_right') {",
-            "                echo $this->MelisFieldRow($val);",
+            "        foreach ($$form->getElements() as $$key => $$val) {",
+            "            if ($$val->getAttribute('group') == 'form_group_right') {",
+            "                echo $$this->MelisFieldRow($$val);",
             "            }",
             "        }",
             "        echo ('</div>');",
             "        ?>",
             "    </div>",
             "</div>",
-            "<?php echo $this->form()->closeTag();?>",
+            "<?php echo $$this->form()->closeTag();?>",
         ],
         "description": "Basic view with double column Functions"
     },

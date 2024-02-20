@@ -3,9 +3,9 @@
   "displayName": "Melis Platform",
   "description": "melis platform",
   "publisher": "simosrennou",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.80.0"
   },
   "repository": "https://github.com/srennou/melis-snippets",
   "keywords": [

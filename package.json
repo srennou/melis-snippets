@@ -3,7 +3,7 @@
   "displayName": "Melis Platform",
   "description": "melis platform",
   "publisher": "simosrennou",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -27,6 +27,10 @@
       {
         "language": "php",
         "path": "./snippets/php.code-snippets"
+      },
+      {
+        "language": "phtml",
+        "path": "./snippets/phtml.code-snippets"
       }
     ],
     "commands": [

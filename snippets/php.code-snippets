@@ -13,11 +13,11 @@
     "Basic join Table Snip": {
         "prefix": "snipMelisTableJoin",
         "body": [
-            "$$select->join("
-            "   'table1',"
-            "    'table1.col1' . ' = table2.col2',"
-            "   ['*'],"
-            "   $$select::JOIN_LEFT"
+            "$$select->join(",
+            "   'table1',",
+            "    'table1.col1' . ' = table2.col2',",
+            "   ['*'],",
+            "   $$select::JOIN_LEFT",
             ");",
         ],
         "description": "Basic Join Table Snippets"
@@ -94,51 +94,6 @@
         ],
         "description": "Basic Config validator Functions"
     },
-    "Basic view with double column Functions": {
-        "prefix": "snipMelisDoubleColumnView",
-        "body": [
-            "<?php",
-            "$$id = $$this->id . '_' . $$this->zoneconfig['conf']['id'];",
-            "$$form = $$this->form;",
-            "$$form->prepare();",
-            "echo $$this->form()->openTag($$form);",
-            "    foreach ($$form->getElements() as $$key => $$val) {",
-            "        if ($$this->id == 'add' && $$val->getAttribute('id') == 'id_column'){",
-            "            continue;",
-            "        }",
-            "        if($$val->getAttribute('group') == null) {",
-            "            echo $$this->MelisFieldRow($$val);",
-            "        }",
-            "    }",
-            "?>",
-            "<div class='row'>",
-            "    <div class='col-12 col-md-6 col-lg-6'>",
-            "        <?php",
-            "        echo ('<div class='form_group_left'>');",
-            "        foreach ($$form->getElements() as $$key => $$val) {",
-            "            if ($$val->getAttribute('group') == 'form_group_left') {",
-            "                echo $$this->MelisFieldRow($$val);",
-            "            }",
-            "        }",
-            "        echo ('</div>');",
-            "        ?>",
-            "    </div>",
-            "    <div class='col-12 col-md-6 col-lg-6'>",
-            "        <?php",
-            "        echo ('<div class='form_group_right'>');",
-            "        foreach ($$form->getElements() as $$key => $$val) {",
-            "            if ($$val->getAttribute('group') == 'form_group_right') {",
-            "                echo $$this->MelisFieldRow($$val);",
-            "            }",
-            "        }",
-            "        echo ('</div>');",
-            "        ?>",
-            "    </div>",
-            "</div>",
-            "<?php echo $$this->form()->closeTag();?>",
-        ],
-        "description": "Basic view with double column Functions"
-    },
     "Basic Config form Factories Functions": {
         "prefix": "snipMelisConfFormFactories",
         "body": [
@@ -150,6 +105,14 @@
         ],
         "description": "Basic Config form Factories Functions"
     },
-    
+    "Basic List Display Snippet": {
+        "prefix": "snipMelisImageColumn",
+        "body": [
+            "foreach ($$tableData as $$key => &$$tableRow) {",
+            "$$tableRow['imgcol'] = !empty($$tableRow['imgcol']) ? ('<img src=\"'.$$tableRow['imgcol'].'\" height=\"70\">'),  : '&nbsp;';",
+            "}"
+        ],
+        "description": "PHP snippet to generate image columns tags dynamically"
+    },
    
 }
